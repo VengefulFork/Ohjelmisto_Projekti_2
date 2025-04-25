@@ -10,6 +10,7 @@ from tarina import tarina, info
 from clear import clear
 from tallennin import tk_tallenin, edelliset_pelit
 from Pisteytys import piste_laskuri
+from pelin_tilanteen_tallennin import np_tallenin
 
 def pääohjelma () :
     # Pääohjelmassa tarvittavia muuttujia
@@ -62,6 +63,8 @@ def pääohjelma () :
                     info()
                 elif komento == "6" :
                     clear()
+                elif komento == "7" :
+                    np_tallenin(aloitus_pelaajan_nimi, ensimmäinen_kenttä, maali, pelaajan_sijainti, pelaajan_kone, kokonaan_kuljettu_matka, kokonais_aika, kokonais_co2)
                 else :
                     print("Virheellinen komento kokeile uudestaan")
         pisteet = piste_laskuri(kokonaan_kuljettu_matka, kokonais_aika, kokonais_co2)
