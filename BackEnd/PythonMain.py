@@ -22,12 +22,16 @@ class Player :
     distance_km = 0
     time_min = 0
     plane = ""
-    def __init__(self, name, start_pos, end_pos, current_pos):
-        self.name = name
-        self.start_pos = start_pos
-        self.end_pos = end_pos
-        self.current_pos = current_pos
-
+    start_pos = []
+    end_pos = []
+    current_pos = ""
+    old_pos = ""
+    # def __init__(self, name, start_pos, end_pos, current_pos):
+    #     self.name = name
+    #     self.start_pos = start_pos
+    #     self.end_pos = end_pos
+    #     self.current_pos = current_pos
+p = Player
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -90,7 +94,11 @@ def game_start(name) :
         fields.append(lopetus_kenttä)
         return fields
     start_end = route_maker()
-    p = Player(name, start_end[0],start_end[1][0],start_end[0][1])
+    p.name = name
+    p.start_pos = start_end[0]
+    p.end_pos = start_end[1][0]
+    p.current_pos = start_end[0][1]
+    print(p.current_pos)
     r = []
     a = {
         "Name": p.start_pos[0],
@@ -110,6 +118,7 @@ def game_start(name) :
     json_response = json.dumps(r)
     response = Response(response=json_response, status=202, mimetype="application/json")
     response.headers["Content-Type"] = "charset=utf-8"
+    print("Function was called from JS")
     return response
 @app.route('/mapDrawer/')
 def map_drawer ():
@@ -146,6 +155,46 @@ def connections (icao):
     for i in conn :
         r.append(i)
     json_response = json.dumps(r)
+    response = Response(response=json_response, status=202, mimetype="application/json")
+    response.headers["Content-Type"] = "charset=utf-8"
+    return response
+@app.route('/class/')
+def searcher ():
+    b = {
+        "Icao" : p.current_pos,
+        "IcaoEnd" : p.end_pos[1],
+    }
+    print("Player current position is" + p.current_pos)
+    json_response = json.dumps(b)
+    response = Response(response=json_response, status=202, mimetype="application/json")
+    response.headers["Content-Type"] = "charset=utf-8"
+    return response
+
+@app.route('/flying/<icao>')
+def flying (icao):
+    p.old_pos = p.current_pos
+    curs = db_connection.cursor()
+    sql = f"SELECT lopetuspiste FROM airport, yhteys WHERE airport.ident = yhteys.aloituspiste AND ident = '{p.current_pos}'"
+    sql2 = f"SELECT aloituspiste FROM airport, yhteys WHERE airport.ident = yhteys.lopetuspiste AND ident = '{p.current_pos}'"
+    curs.execute(sql)
+    conn = curs.fetchall()
+    curs.execute(sql2)
+    conn.extend(curs.fetchall())
+
+    options = []
+    for a in conn :
+        # print(a[0])
+        curs.execute(f"SELECT ident FROM airport WHERE ident ='{a[0]}'")
+        options.extend(curs.fetchall())
+    for i in options :
+        if icao in i :
+            p.current_pos = i[0]
+
+    a = {
+        "OldPos" : p.old_pos,
+        "NewPos" : p.current_pos
+    }
+    json_response = json.dumps(a)
     response = Response(response=json_response, status=202, mimetype="application/json")
     response.headers["Content-Type"] = "charset=utf-8"
     return response
