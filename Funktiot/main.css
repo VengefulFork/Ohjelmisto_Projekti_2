@@ -1,0 +1,78 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.topbar {
+  display: flex;
+  background-color: #ccc;
+  padding: 10px;
+  gap: 10px;
+  align-items: center;
+}
+
+button {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  background-color: #eee;
+  border: none;
+  padding: 6px 12px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  padding: 8px 12px;
+  display: block;
+  text-decoration: none;
+  color: black;
+}
+
+.side-panel {
+  width: 200px;
+  background-color: #f1f1f1;
+  padding: 10px;
+  position: absolute;
+  left: 0;
+  top: 50px;
+  display: none;
+}
+
+.game-area {
+  margin-left: 220px;
+  padding: 20px;
+}
+
+.map {
+  width: 100%;
+  height: 300px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+.flight-info {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid black;
+  display: none;
+  background-color: #fafafa;
+}

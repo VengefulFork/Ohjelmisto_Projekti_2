@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Peli</title>
+  <link rel="stylesheet" href="main.css" />
+</head>
+<body>
+  <div class="topbar">
+    <button id="menuBtn">Menu</button>
+    <div class="dropdown">
+      <button class="dropbtn">Säännöt</button>
+      <div class="dropdown-content">
+        <a href="#">Sääntö 1</a>
+        <a href="#">Sääntö 2</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn">Koneet</button>
+      <div class="dropdown-content">
+        <a href="#">Kone 1</a>
+        <a href="#">Kone 2</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn">Trivia</button>
+      <div class="dropdown-content">
+        <a href="#">tekstiä</a>
+        <a href="#"tekstiä</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="sideMenu" class="side-panel">
+    <h3>Pelaajan tiedot</h3>
+    <ul>
+      <li>CO2</li>
+      <li>Km</li>
+      <li>Aika</li>
+      <li>Nykyinen kone</li>
+    </ul>
+  </div>
+
+  <div class="game-area">
+    <h2>Kartta</h2>
+    <svg viewBox="0 0 400 300" class="map">
+
+    </svg>
+
+    <div id="flightInfo" class="flight-info">
+      <p>Kentän nimi: A</p>
+      <p>Etäisyys: 100 km</p>
+      <p>Lentoaika: 1 h</p>
+      <p>Tuotettu CO2: 200 kg</p>
+      <button>Lennä!</button>
+    </div>
+  </div>
+</body>
+<script>
+  const menuBtn = document.getElementById("menuBtn");
+  const sideMenu = document.getElementById("sideMenu");
+
+  menuBtn.onclick = () => {
+    sideMenu.style.display = sideMenu.style.display === "block" ? "none" : "block";
+  };
+
+  function showInfo() {
+    document.getElementById("flightInfo").style.display = "block";
+  }
+</script>
+</html>
