@@ -1,0 +1,16 @@
+.all {
+    display: flex;
+    flex-direction: row;
+}
+
+#map{
+    width: 75%;
+    height: 95vh;
+
+}
+#sidebar {
+    width: 25%;
+    height: 95vh;
+    background-color: whitesmoke;
+
+}
