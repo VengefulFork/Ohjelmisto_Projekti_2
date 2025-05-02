@@ -3,6 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <title>Trivia Sivu</title>
+  <!-- jostain syystä css tyyli vaikuttaa täälä mutta ei css tiedostossa -->
+    <style>
+    h4 {
+      margin-bottom: 20px;
+      font-size: 200px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  </style>
   <link rel="stylesheet" href="trivia.css" />
 </head>
 <body>
@@ -19,7 +31,7 @@
     </div>
 
     <div class="main">
-      <h1>Trivia Sivu</h1>
+      <h1>Trivia</h1>
       <div class="info">
         <h3>Infoa pelistä</h3>
         <ul>
@@ -30,6 +42,7 @@
           <li>• ~</li>
           <li>• ~</li>
         </ul>
+        <button onclick="window.location.href='mainpage.html'">let the games begin</button>
       </div>
     </div>
   </div>
