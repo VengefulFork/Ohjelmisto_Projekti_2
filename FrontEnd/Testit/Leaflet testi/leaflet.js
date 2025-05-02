@@ -190,5 +190,6 @@ async function flying(toFlyIcao) {
 function onClick() {
   const b = this._popup.getContent();
   const toFlyIcao = b.id;
-  flying(toFlyIcao);
+  console.log(document.getElementById('EFKT'))
+  // flying(toFlyIcao);
 }
