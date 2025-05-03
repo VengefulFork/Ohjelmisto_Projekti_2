@@ -7,27 +7,24 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 async function mainProgram() {
-
-
   gameStart().then(i => {
     mapCreator();
     gameStatusUpdater();
     plane();
 
   });
-  const planeChange = document.getElementById('change')
-  planeChange.addEventListener('click', function(){
-    planeSwitcher().then(i =>{
-      map.closePopup()
-      if (i === "Dash 8 Q400") {
-        planeChange.textContent = 'Change plane to Boeing 737'
+  const planeChange = document.getElementById('change');
+  planeChange.addEventListener('click', function() {
+    planeSwitcher().then(i => {
+      map.closePopup();
+      if (i === 'Dash 8 Q400') {
+        planeChange.textContent = 'Change plane to Boeing 737';
+      } else {
+        planeChange.textContent = 'Change plane to Dash 8 Q400';
       }
-      else {
-        planeChange.textContent = 'Change plane to Dash 8 Q400'
-      }
-      plane()
-    })
-    } )
+      plane();
+    });
+  });
 }
 
 async function gameStart() {
@@ -221,24 +218,27 @@ async function plane() {
     const speed = document.getElementById('Speed');
     const co2PerKm = document.getElementById('Co2km');
     name.innerHTML = 'Name : ' + data['Plane']['malli'];
-    speed.innerHTML = 'Speed of plane is : ' + data['Plane']['max_nopeus_kmh'] + ' kmh';
-    co2PerKm.innerHTML ='Co2 produced per km is around : ' + data['Plane']['hiilidioksidi_per_km'] + ' kg';
+    speed.innerHTML = 'Speed of plane is : ' + data['Plane']['max_nopeus_kmh'] +
+        ' kmh';
+    co2PerKm.innerHTML = 'Co2 produced per km is around : ' +
+        data['Plane']['hiilidioksidi_per_km'] + ' kg';
     console.log(data);
   } catch (error) {
     console.log(error);
   }
 
 }//End of function hands off
-async function planeSwitcher(){
-  let newPlane = ""
+async function planeSwitcher() {
+  let newPlane = '';
   try {
-    const response = await fetch('http://127.0.0.1:3000/plane/')
-    const data = await  response.json()
-    newPlane = data['New Plane']['malli']
-    console.log(newPlane)
+    const response = await fetch('http://127.0.0.1:3000/plane/');
+    const data = await response.json();
+    newPlane = data['New Plane']['malli'];
+    console.log(newPlane);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-  return newPlane
+  return newPlane;
 }
+
 mainProgram();
