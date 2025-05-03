@@ -1,12 +1,12 @@
 import json
 import random
-from dataclasses import fields
-
+from geopy import distance
+from lentokoneet import lentokonetyypit
 import mariadb
 from flask import Flask, Response
 from flask_cors import CORS
+import random
 
-from Funktiot.Reitinluoja import reitinluoja
 
 db_connection = mariadb.connect(
     host='localhost',
@@ -16,22 +16,45 @@ db_connection = mariadb.connect(
     password='12345',
     autocommit=True
 )
-
 class Player :
     co2 = 0
     distance_km = 0
     time_min = 0
-    plane = ""
+    plane = lentokonetyypit[0]
     start_pos = []
     end_pos = []
     current_pos = ""
     old_pos = ""
-    # def __init__(self, name, start_pos, end_pos, current_pos):
-    #     self.name = name
-    #     self.start_pos = start_pos
-    #     self.end_pos = end_pos
-    #     self.current_pos = current_pos
+    game_status = ""
+
 p = Player
+def flight_info (icao) :
+    # Calculating distance between player's current position and future position
+    curs = db_connection.cursor()
+    sql1 = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident = '{p.current_pos}'"
+    curs.execute(sql1)
+    old_field = curs.fetchall()
+    sql2 = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident = '{icao}'"
+    curs.execute(sql2)
+    new_field = curs.fetchall()
+    t_distance = round(distance.distance(old_field, new_field ).km)
+
+    #Time spent on flight in mins
+    flight_time = round(t_distance/ p.plane['max_nopeus_kmh']*60)
+    #Random extra time to simulate switching to connecting flight
+    switch_time = random.randint(15, 30)
+    flight_time += switch_time
+    #Calculating co2 spent on flight based off of plane characteristics
+    #First multiply distance by plane fuel per km
+    fuel_consumed = t_distance * p.plane['poltoaineen_kulutus_kg/km']
+    #Then multiply by 3.16 for approx co2 produced
+    produced_co2 = fuel_consumed * 3.16
+    flight_data = {
+        "Distance" : t_distance,
+        "Time" : flight_time,
+        "Co2" : round(produced_co2)
+    }
+    return flight_data
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -94,6 +117,11 @@ def game_start(name) :
         fields.append(lopetus_kenttä)
         return fields
     start_end = route_maker()
+    p.game_status = ""
+    p.plane = lentokonetyypit[0]
+    p.co2 = 0
+    p.time_min = 0
+    p.distance_km = 0
     p.name = name
     p.start_pos = start_end[0]
     p.end_pos = start_end[1][0]
@@ -114,7 +142,6 @@ def game_start(name) :
         "Icao": p.start_pos[1],
     }
     r.append(c)
-
     json_response = json.dumps(r)
     response = Response(response=json_response, status=202, mimetype="application/json")
     response.headers["Content-Type"] = "charset=utf-8"
@@ -158,13 +185,18 @@ def connections (icao):
     response = Response(response=json_response, status=202, mimetype="application/json")
     response.headers["Content-Type"] = "charset=utf-8"
     return response
-@app.route('/class/')
-def searcher ():
+@app.route('/status/')
+def status ():
     b = {
         "Icao" : p.current_pos,
         "IcaoEnd" : p.end_pos[1],
+        "Km": p.distance_km,
+        "Co2" : p.co2,
+        "Time" : p.time_min,
+        "Plane" : p.plane,
+        "GameStatus" : p.game_status
     }
-    print("Player current position is" + p.current_pos)
+    # print("Player current position is" + p.current_pos)
     json_response = json.dumps(b)
     response = Response(response=json_response, status=202, mimetype="application/json")
     response.headers["Content-Type"] = "charset=utf-8"
@@ -182,14 +214,21 @@ def flying (icao):
     conn.extend(curs.fetchall())
 
     options = []
+
     for a in conn :
         # print(a[0])
         curs.execute(f"SELECT ident FROM airport WHERE ident ='{a[0]}'")
         options.extend(curs.fetchall())
+    #Storing data from the flight to the p object
+    flight_data = flight_info(icao)
+    p.distance_km += flight_data['Distance']
+    p.time_min += flight_data['Time']
+    p.co2 += flight_data['Co2']
     for i in options :
         if icao in i :
             p.current_pos = i[0]
-
+    if p.current_pos == p.end_pos[1] :
+        p.game_status = "WON"
     a = {
         "OldPos" : p.old_pos,
         "NewPos" : p.current_pos
@@ -198,6 +237,37 @@ def flying (icao):
     response = Response(response=json_response, status=202, mimetype="application/json")
     response.headers["Content-Type"] = "charset=utf-8"
     return response
+
+@app.route('/distance/<icao>')
+def distance_calculation (icao):
+    data = flight_info(icao)
+    b = {
+        "Distance" : data['Distance'],
+        "Time" : data['Time'],
+        "Co2" : data['Co2']
+    }
+    json_response = json.dumps(b)
+    response = Response(response=json_response, status=202, mimetype="application/json")
+    response.headers["Content-Type"] = "charset=utf-8"
+    return response
+
+@app.route('/plane/')
+def plane_switcher():
+    if p.plane['malli'] == lentokonetyypit[0]['malli'] :
+        p.plane = lentokonetyypit[1]
+    elif p.plane['malli'] == lentokonetyypit[1]['malli']:
+        p.plane = lentokonetyypit[0]
+
+
+    b = {
+        "New Plane" : p.plane
+    }
+
+    json_response = json.dumps(b)
+    response = Response(response=json_response, status=202, mimetype="application/json")
+    response.headers["Content-Type"] = "charset=utf-8"
+    return response
+
 
 if __name__ == '__main__':
     app.run(use_reloader=True, host='127.0.0.1', port=3000)
