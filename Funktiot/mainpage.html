@@ -28,23 +28,25 @@
         <a href="#">Kone 2</a>
       </div>
     </div>
-    <div class="dropdown">
-      <button class="dropbtn">Trivia</button>
-      <div class="dropdown-content">
-        <a href="#">tekstiä</a>
-        <a href="#"tekstiä</a>
-      </div>
+      <button onclick="window.location.href='trivia.html'">trivia</button>
     </div>
   </div>
 
   <div id="sideMenu" class="side-panel">
-    <h3>Pelaajan tiedot</h3>
-    <ul>
-      <li>CO2</li>
-      <li>Km</li>
-      <li>Aika</li>
-      <li>Nykyinen kone</li>
+    <input id="Player state" >
+    <ul id="StartPos">Player start pos</ul>
+    <ul id="EndPos">Player goal</ul>
+    <ul id="PlayerInfo">Player info
+      <li id="Co2">0 kg CO2</li>
+      <li id="Time">0 min</li>
+      <li id="TotDist">0 km</li>
     </ul>
+    <ul id=Plane">current planes info
+      <li id="PlaneName"></li>
+      <li id="Speed"></li>
+      <li id="Co2km"></li>
+    </ul>
+    <button id="change">change plane</button>
   </div>
 
   <div id="map" class="game-area">
