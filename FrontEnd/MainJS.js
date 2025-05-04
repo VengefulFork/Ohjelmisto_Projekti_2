@@ -64,7 +64,7 @@ async function gameStart() {
     console.log(error.message);
   }
 
-} //This is the end of the function don't fuck with it
+} //End of function hands off
 
 async function mapCreator() {
   try {
@@ -98,7 +98,7 @@ async function mapCreator() {
         }).addTo(map);
         marker.bindPopup('You are here');
       } //End of first if statement
-      else if (conn.includes(i.Icao)) {
+      else if (conn.includes(i.Icao) && i.Icao !== endPoint) {
         const marker = L.circle([i.Lat, i.Long], {
           color: 'yellow',
           fillColor: 'yellow',
@@ -150,13 +150,64 @@ async function mapCreator() {
 
         });
 
-      } else if (i.Icao === endPoint) {
+      } else if (i.Icao === endPoint && !conn.includes(i.Icao)) {
         const marker = L.circle([i.Lat, i.Long], {
           color: 'red',
           fillColor: 'red',
           fillOpacity: 1,
           radius: 25000,
         }).addTo(map);
+      } else if (i.Icao === endPoint && conn.includes(i.Icao)) {
+        const marker = L.circle([i.Lat, i.Long], {
+          color: 'purple',
+          fillColor: 'purple',
+          fillOpacity: 1,
+          radius: 25000,
+        }).addTo(map);
+        const popupDiv = document.createElement('div');
+        popupDiv.setAttribute('id', i.Icao);
+        const h4 = document.createElement('h4');
+        h4.textContent = 'Fly here to win';
+        popupDiv.appendChild(h4);
+        const flyButton = document.createElement('button');
+        flyButton.setAttribute('id', i.Icao);
+        flyButton.type = 'button';
+        flyButton.textContent = 'Fly here';
+        const km = document.createElement('li');
+        km.textContent = '';
+        const flightInfo = document.createElement('ul');
+        const time = document.createElement('li');
+        const co2 = document.createElement('li');
+        flightInfo.innerHTML = 'Info for flight with current plane';
+        flightInfo.appendChild(time);
+        flightInfo.appendChild(co2);
+
+        popupDiv.appendChild(km);
+        popupDiv.appendChild(flightInfo);
+        popupDiv.appendChild(flyButton);
+        marker.bindPopup(popupDiv);
+        marker.on('click', onClick);
+
+        function onClick() {
+          const b = this._popup.getContent();
+          const icao = b.id;
+          distance(icao).then(i => {
+            km.textContent = 'Distance ' + i['Distance'] + ' KM';
+            co2.textContent = i['Co2'] + 'kg Co2 produced';
+            time.textContent = i['Time'] + ' min';
+          });
+        }
+
+        flyButton.addEventListener('click', function() {
+          const icao = this.id;
+          flying(icao).then(i => {
+            mapCreator();
+            gameStatusUpdater();
+            marker.closePopup();
+
+          });
+
+        });
       } else {
         const marker = L.circle([i.Lat, i.Long], {
           color: 'blue',
