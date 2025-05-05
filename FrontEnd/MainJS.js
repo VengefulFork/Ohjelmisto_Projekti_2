@@ -255,7 +255,7 @@ async function gameStatusUpdater() {
     const time = document.getElementById('Time');
     time.textContent = data['Time'] + ' Mins';
     if (data['GameStatus'] === 'WON') {
-      alert('You have won the game congrats');
+      window.location.href='EndTest.html';
     }
   } catch (error) {
     console.log(error.message);

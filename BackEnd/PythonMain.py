@@ -17,6 +17,7 @@ db_connection = mariadb.connect(
     autocommit=True
 )
 class Player :
+    name = ""
     co2 = 0
     distance_km = 0
     time_min = 0
@@ -26,8 +27,96 @@ class Player :
     current_pos = ""
     old_pos = ""
     game_status = ""
+    points = 0
 
 p = Player
+
+def points_calculator ():
+    optimal_distance = 10000
+
+    medium_distance = 15000
+
+    long_distance = 20000
+
+    vlong_distance = 25000
+
+    tpoints = 25
+
+    points = 0
+
+
+    optimal_t = 12
+
+    medium_t = 16
+
+    long_t = 20
+
+    vlong_t = 24
+
+    points_t = 0
+
+
+    optimal_co2 = 10000
+
+    medium_co2 = 15000
+
+    lot_co2 = 20000
+
+    vmuch_co2 = 25000
+
+    points_co2 = 0
+
+
+    if p.distance_km <= optimal_distance:
+        points = tpoints * 4
+
+    if optimal_distance < p.distance_km <= medium_distance:
+        points = tpoints * 3
+
+    if medium_distance < p.distance_km <= long_distance:
+        points = tpoints * 2
+
+    if long_distance < p.distance_km <= vlong_distance:
+        points = tpoints
+
+    if p.distance_km > vlong_distance:
+        points = 0
+
+
+    if p.time_min <= optimal_t:
+        points_t = tpoints * 4
+
+    if optimal_t < p.time_min <= medium_t:
+        points_t = tpoints * 3
+
+    if medium_t < p.time_min <= long_t:
+        points_t = tpoints * 2
+
+    if long_t < p.time_min <= vlong_t:
+        points_t = tpoints
+
+    if p.time_min > vlong_t:
+        points_t = 0
+
+
+    if p.co2 <= optimal_co2:
+        points_co2 = tpoints * 4
+
+    if optimal_co2 < p.co2 <= medium_co2:
+        points_co2 = tpoints * 3
+
+    if medium_co2 < p.co2 <= lot_co2:
+        points_co2 = tpoints * 2
+
+    if lot_co2 < p.co2 <= vmuch_co2:
+        points_co2 = tpoints
+
+    if p.co2 > vmuch_co2:
+        points_t = 0
+
+    points_t = points + points_t + points_co2
+    return points_t
+
 def flight_info (icao) :
     # Calculating distance between player's current position and future position
     curs = db_connection.cursor()
@@ -55,6 +144,16 @@ def flight_info (icao) :
         "Co2" : round(produced_co2)
     }
     return flight_data
+
+def tk_tallenin ():
+    curs = db_connection.cursor()
+    # Onnistuneesti suoritetun pelin jälkeen tallenetaan tietokantaa seuraavat tiedot
+    tallenus = (f"INSERT INTO edelliset_pelit (pelaajan_nimi, aloitus_kentta, maali, kuljettu_matka_km, matkan_aika_min, tuotettu_co2_kg, pisteet)"
+                f"VALUES ('{p.name}', '{p.start_pos[0]}', '{p.end_pos[0]}', '{p.distance_km}', '{p.time_min}', '{p.co2}', '{p.points}') ")
+    curs.execute(tallenus)
+    db_connection.commit()
+
+    return
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -117,6 +216,7 @@ def game_start(name) :
         fields.append(lopetus_kenttä)
         return fields
     start_end = route_maker()
+    p.points = 0
     p.game_status = ""
     p.plane = lentokonetyypit[0]
     p.co2 = 0
@@ -188,13 +288,15 @@ def connections (icao):
 @app.route('/status/')
 def status ():
     b = {
+        "Name" : p.name,
         "Icao" : p.current_pos,
         "IcaoEnd" : p.end_pos[1],
         "Km": p.distance_km,
         "Co2" : p.co2,
         "Time" : p.time_min,
         "Plane" : p.plane,
-        "GameStatus" : p.game_status
+        "GameStatus" : p.game_status,
+        "Points" : p.points
     }
     # print("Player current position is" + p.current_pos)
     json_response = json.dumps(b)
@@ -229,6 +331,8 @@ def flying (icao):
             p.current_pos = i[0]
     if p.current_pos == p.end_pos[1] :
         p.game_status = "WON"
+        p.points = points_calculator()
+        tk_tallenin()
     a = {
         "OldPos" : p.old_pos,
         "NewPos" : p.current_pos
@@ -268,6 +372,23 @@ def plane_switcher():
     response.headers["Content-Type"] = "charset=utf-8"
     return response
 
+@app.route('/topFiveGames/')
+def top_five_games():
+    curs = db_connection.cursor()
+    sql = f"SELECT pelaajan_nimi, pisteet FROM edelliset_pelit ORDER BY pisteet DESC LIMIT 5"
+    curs.execute(sql)
+    games = curs.fetchall()
+    c = []
+    for i in games :
+        b = {
+            "Player" : i[0],
+            "Points" : i[1]
+        }
+        c.append(b)
+    json_response = json.dumps(c)
+    response = Response(response=json_response, status=202, mimetype="application/json")
+    response.headers["Content-Type"] = "charset=utf-8"
+    return response
 
 if __name__ == '__main__':
     app.run(use_reloader=True, host='127.0.0.1', port=3000)

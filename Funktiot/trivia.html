@@ -14,20 +14,31 @@
       font-size: 18px;
       cursor: pointer;
     }
+    /*Controls the table*/
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 5px;
+    }
   </style>
+  <script src="/FrontEnd/TriviaJS.js" defer></script>
   <link rel="stylesheet" href="trivia.css" />
 </head>
 <body>
   <div class="container">
     <div class="menu">
       <h2>Menu</h2>
-      <ul>
-        <li>Top pelit</li>
-        <li>•</li>
-        <li>•</li>
-        <li>•</li>
-        <li>•</li>
-      </ul>
+      <h3>Top 5 games</h3>
+      <table id="topGames">
+        <tr>
+          <th>Player</th>
+          <th>Points</th>
+        </tr>
+      </table>
+<!--      <ul id="topGames">-->
+<!--        <li>Top 5 games</li>-->
+
+<!--      </ul>-->
     </div>
 
     <div class="main">
