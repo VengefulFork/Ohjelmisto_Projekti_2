@@ -377,7 +377,7 @@ def plane_switcher():
 @app.route('/topFiveGames/')
 def top_five_games():
     curs = db_connection.cursor()
-    sql = f"SELECT pelaajan_nimi, pisteet FROM edelliset_pelit ORDER BY pisteet DESC LIMIT 5"
+    sql = f"SELECT pelaajan_nimi, pisteet, id FROM edelliset_pelit ORDER BY pisteet DESC LIMIT 5"
     curs.execute(sql)
     games = curs.fetchall()
     c = []
