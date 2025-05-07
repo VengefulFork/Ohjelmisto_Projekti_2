@@ -19,5 +19,7 @@ async function top5Games() {
     console.log(error);
   }
 }
+async function form(){
 
+}
 top5Games()

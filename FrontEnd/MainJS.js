@@ -224,7 +224,7 @@ async function mapCreator() {
   }
   console.log(playerCurrentLocation);
 } //mapCreator end hands off
-
+// Calling flask for all the flying functionality
 async function flying(icao) {
   const response = await fetch(`http://127.0.0.1:3000/flying/${icao}`);
   const data = await response.json();
@@ -241,6 +241,7 @@ async function distance(icao) {
   }
   return flight_data;
 }// End of function hands off
+// Mostly for updating all the html elements that contain data for the current game
 async function gameStatusUpdater() {
 
   try {
@@ -254,13 +255,16 @@ async function gameStatusUpdater() {
 
     const time = document.getElementById('Time');
     time.textContent = data['Time'] + ' Mins';
+    // If gameStatus is won then we load the victory screen
     if (data['GameStatus'] === 'WON') {
-      window.location.href='EndTest.html';
+      // For reasons unknown this specific file refuses to load unless its this specific route
+      window.location.href='http://localhost:63342/Ohjelmisto_Projekti_2/FrontEnd/victory.html';
     }
   } catch (error) {
     console.log(error.message);
   }
 }//End of function hands off
+// Function for populating the info for players current plane
 async function plane() {
   try {
     const response = await fetch('http://127.0.0.1:3000/status/');
@@ -279,6 +283,7 @@ async function plane() {
   }
 
 }//End of function hands off
+//Function for calling the FLASK that switches players plane
 async function planeSwitcher() {
   let newPlane = '';
   try {

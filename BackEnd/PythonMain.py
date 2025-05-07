@@ -290,6 +290,8 @@ def status ():
     b = {
         "Name" : p.name,
         "Icao" : p.current_pos,
+        "Start" :p.start_pos,
+        "End" : p.end_pos,
         "IcaoEnd" : p.end_pos[1],
         "Km": p.distance_km,
         "Co2" : p.co2,
