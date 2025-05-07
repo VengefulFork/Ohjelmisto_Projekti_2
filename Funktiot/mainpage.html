@@ -33,19 +33,16 @@
     </div>
   </div>
     <div class="planelist">
-     <h1>Lentokonetyypit</h1>
-
-    {% for kone in lentokonetyypit %}
-        <ul>
-            <li><strong>Malli:</strong> {{ kone.malli }}</li>
-            <li><strong>Valmistaja:</strong> {{ kone.valmistaja }}</li>
-            <li><strong>Matkustajia:</strong> {{ kone.matkustajamaara }}</li>
-            <li><strong>Kantama (km):</strong> {{ kone.kantama_km }}</li>
-            <li><strong>Nopeus (km/h):</strong> {{ kone.max_nopeus_kmh }}</li>
-            <li><strong>Polttoaine (kg/km):</strong> {{ kone.poltoaineen_kulutus_kg/km }}</li>
-            <li><strong>CO₂ (kg/km):</strong> {{ kone.hiilidioksidi_per_km }}</li>
-        </ul>
-    {% endfor %}
+     <ul>
+       <ul>malli: Boeing 737</ul>
+       <ul>max_nopeus_kmh: 876</ul>
+       <ul>poltoaineen_kulutus_kg/km: 3.49</ul>
+       <ul>hiilidioksidi_per_km: 11</ul>
+     </ul>
+      <ul>malli": "Dash 8 Q400</ul>
+      <ul>max_nopeus_kmh: 600</ul>
+      <ul>poltoaineen_kulutus_kg/km: 1.83,</ul>
+      <ul>hiilidioksidi_per_km: 5.78</ul>
     </div>
   <div id="sideMenu" class="side-panel">
     <ul id="StartPos">Player start pos</ul>
