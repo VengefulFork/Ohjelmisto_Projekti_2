@@ -19,10 +19,11 @@ async function top5Games() {
     console.log(error);
   }
 }
+async function gameLoading() {
 
-top5Games();
-//Creating players name to local storage
-const subButton = document.getElementById('submit');
+}
+function playerNameSub () {
+  const subButton = document.getElementById('submit');
 subButton.addEventListener('click', function(evt) {
   evt.preventDefault();
   const playerName = document.getElementById('pName').value;
@@ -34,5 +35,22 @@ subButton.addEventListener('click', function(evt) {
     localStorage.setItem('PlayerName', playerName);
     window.location.href = 'mainpage.html';
   }
-
 });
+
+}
+function loadMenu (){
+  const dialog = document.querySelector('dialog')
+  const span = document.querySelector('span')
+  const button = document.getElementById('loadMenu')
+  button.addEventListener('click', function(evt){
+  const menu = dialog.querySelector('h2');
+  dialog.showModal();
+  span.addEventListener('click', function(evt) {
+    dialog.close();
+  });
+  })
+}
+top5Games();
+playerNameSub()
+loadMenu()
+//Creating players name to local storage
