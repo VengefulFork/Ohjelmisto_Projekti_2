@@ -7,7 +7,8 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 async function mainProgram() {
-  gameStart().then(i => {
+  const playerName = localStorage.getItem('PlayerName')
+  gameStart(playerName).then(i => {
     mapCreator();
     gameStatusUpdater();
     plane();
@@ -27,8 +28,8 @@ async function mainProgram() {
   });
 }
 
-async function gameStart() {
-  const playerName = 'Testing';
+async function gameStart(playerName) {
+  // const playerName = 'Testing';
   const startPos = document.getElementById('StartPos');
   const endPos = document.getElementById('EndPos');
   try {

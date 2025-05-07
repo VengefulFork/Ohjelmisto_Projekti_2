@@ -23,3 +23,11 @@ async function form(){
 
 }
 top5Games()
+
+const subButton = document.getElementById('submit');
+subButton.addEventListener('click', function(evt){
+  evt.preventDefault()
+  const playerName = document.getElementById('pName').value;
+  localStorage.setItem("PlayerName", playerName);
+  window.location.href="mainpage.html";
+})
