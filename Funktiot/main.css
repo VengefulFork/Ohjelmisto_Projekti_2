@@ -82,3 +82,13 @@ button {
     width: 65%;
     height: 70vh;
 }
+.planelist{
+  text-align: left;
+position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 220px;
+  background-color: #e0e0e0;
+  padding: 10px;
+}

@@ -1,3 +1,7 @@
+import flask
+from flask import Flask, render_template
+app = Flask(__name__)
+
 lentokonetyypit = [
     {
         "malli": "Boeing 737",
@@ -18,7 +22,10 @@ lentokonetyypit = [
         "hiilidioksidi_per_km": 5.78
     }
 ]
-# for kone in lentokonetyypit:
-#     print(f"Malli: {kone['malli']}, Valmistaja: {kone['valmistaja']}, "
-#           f"Matkustajamäärä: {kone['matkustajamaara']}, Kantama: {kone['kantama_km']} km, "
-#           f"Maksiminopeus: {kone['max_nopeus_kmh']} km/h")
+
+@app.route("/")
+def index():
+    return render_template("mainpage.html", lentokonetyypit=lentokonetyypit)
+
+if __name__ == "__main__":
+    app.run(debug=True)
