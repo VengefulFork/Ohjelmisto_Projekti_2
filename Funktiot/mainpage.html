@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="main.css" />
 </head>
 <body>
+
   <div class="topbar">
     <button id="menuBtn">Menu</button>
     <div class="dropdown">
@@ -31,7 +32,21 @@
       <button onclick="window.location.href='trivia.html'">trivia</button>
     </div>
   </div>
+    <div class="planelist">
+     <h1>Lentokonetyypit</h1>
 
+    {% for kone in lentokonetyypit %}
+        <ul>
+            <li><strong>Malli:</strong> {{ kone.malli }}</li>
+            <li><strong>Valmistaja:</strong> {{ kone.valmistaja }}</li>
+            <li><strong>Matkustajia:</strong> {{ kone.matkustajamaara }}</li>
+            <li><strong>Kantama (km):</strong> {{ kone.kantama_km }}</li>
+            <li><strong>Nopeus (km/h):</strong> {{ kone.max_nopeus_kmh }}</li>
+            <li><strong>Polttoaine (kg/km):</strong> {{ kone.poltoaineen_kulutus_kg/km }}</li>
+            <li><strong>CO₂ (kg/km):</strong> {{ kone.hiilidioksidi_per_km }}</li>
+        </ul>
+    {% endfor %}
+    </div>
   <div id="sideMenu" class="side-panel">
     <ul id="StartPos">Player start pos</ul>
     <ul id="EndPos">Player goal</ul>
