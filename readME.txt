@@ -6,3 +6,5 @@ Testit sisältää lähinnä erilaisia kokeiluja jne.
 
 Old Project kansiossa on viimekurssin projekti ja siihen liittyvät tiedostot
 Eli ei varsinaisesti tähän projektiin liittyviä.
+
+JS ja python puolella on jonkin verran testaamiseen liittyviä console.log ja print komentoja jotan en ehtiny/halunnut poistaa
