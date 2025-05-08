@@ -30,7 +30,28 @@ class Player :
     points = 0
 
 p = Player
-
+def loader (c) :
+    curs = db_connection.cursor()
+    for i in lentokonetyypit :
+        if i['malli'] == c['Plane'] :
+            p.plane = i
+    p.name = c['Player']
+    sql2 = f"SELECT name, ident FROM airport WHERE name ='{c['Start']}'"
+    curs.execute(sql2)
+    star_pos = curs.fetchall()
+    p.start_pos = star_pos[0]
+    sql3 = f"SELECT name, ident FROM airport WHERE name ='{c['Goal']}'"
+    curs.execute(sql3)
+    goal = curs.fetchall()
+    p.end_pos = goal[0]
+    p.current_pos = c['Current']
+    p.co2 = c['Co2']
+    p.distance_km = c['Km']
+    p.time_min = c['Time']
+    p.points = 0
+    p.old_pos = ""
+    p.game_status = ""
+    return
 def points_calculator ():
     optimal_distance = 10000
 
@@ -154,6 +175,16 @@ def tk_tallenin ():
     db_connection.commit()
 
     return
+def saver ():
+    curs = db_connection.cursor()
+    tallenus = (f"INSERT INTO tallennetut_pelit(pelaajan_nimi, aloitus_kentta, maali, sijainti_kentta, "
+                f"pelaajan_kone, kuljettu_matka_km, matkan_aika_min, tuotettu_co2_kg)"
+                f"VALUES ('{p.name}', '{p.start_pos[0]}', '{p.end_pos[0]}', '{p.current_pos}',"
+                f" '{p.plane['malli']}', '{p.distance_km}', '{p.time_min}', '{p.co2}')")
+    curs.execute(tallenus)
+    db_connection.commit()
+    return
+
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -391,6 +422,69 @@ def top_five_games():
     response = Response(response=json_response, status=202, mimetype="application/json")
     response.headers["Content-Type"] = "charset=utf-8"
     return response
+
+@app.route('/savedGames/')
+def saved_games():
+    curs = db_connection.cursor()
+    sql = "SELECT * FROM tallennetut_pelit"
+    curs.execute(sql)
+    games = curs.fetchall()
+    games_list = []
+    for i in games :
+        b = {
+            "Id" : i[0],
+            "Player" : i[1],
+            "Start" : i[2],
+            "Goal" : i[3],
+            "Current" : i[4],
+            "Plane" : i[5],
+            "Km" : i[6],
+            "Time" : i[7],
+            "Co2" : i[8],
+        }
+        games_list.append(b)
+    json_response = json.dumps(games_list)
+    response = Response(response=json_response, status=202, mimetype="application/json")
+    response.headers["Content-Type"] = "charset=utf-8"
+    return response
+@app.route('/loading/<id>/<name>')
+def loading (id, name):
+    curs = db_connection.cursor()
+    sql1 = f"SELECT * FROM tallennetut_pelit WHERE id = '{id}' AND pelaajan_nimi = '{name}'"
+    curs.execute(sql1)
+    player = curs.fetchall()
+    print(player)
+    c = {
+        "Id": player[0][0],
+        "Player": player[0][1],
+        "Start": player[0][2],
+        "Goal": player[0][3],
+        "Current": player[0][4],
+        "Plane": player[0][5],
+        "Km": player[0][6],
+        "Time": player[0][7],
+        "Co2": player[0][8],
+        }
+    # To change the correct plane from the loaded data
+    loader(c)
+
+
+    json_response = json.dumps(c)
+    response = Response(response=json_response, status=202, mimetype="application/json")
+    response.headers["Content-Type"] = "charset=utf-8"
+    return response
+@app.route('/save/')
+def save ():
+    saver()
+    # Code an actual check to check if the save was actually successful if there's time left
+    c = {
+        "SaveStatus" : "Confirmed"
+    }
+    json_response = json.dumps(c)
+    response = Response(response=json_response, status=202, mimetype="application/json")
+    response.headers["Content-Type"] = "charset=utf-8"
+    return response
+
 
 if __name__ == '__main__':
     app.run(use_reloader=True, host='127.0.0.1', port=3000)

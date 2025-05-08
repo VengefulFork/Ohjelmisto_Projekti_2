@@ -7,15 +7,25 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 async function mainProgram() {
-  const playerName = localStorage.getItem('PlayerName')
-  gameStart(playerName).then(i => {
+  const status = localStorage.getItem('FromLoading');
+  if (status === 'No') {
+    const playerName = localStorage.getItem('PlayerName');
+    gameStart(playerName).then(i => {
+      mapCreator();
+      gameStatusUpdater();
+      plane();
+
+    });
+  } else if (status === 'Yes') {
+  gameStartFromLoad().then(i =>{
     mapCreator();
     gameStatusUpdater();
     plane();
+  })
+  }
 
-  });
   const planeChange = document.getElementById('change');
-  planeChange.addEventListener('click', function() {
+  planeChange.addEventListener('click', function(evt) {
     planeSwitcher().then(i => {
       map.closePopup();
       if (i === 'Dash 8 Q400') {
@@ -25,6 +35,10 @@ async function mainProgram() {
       }
       plane();
     });
+  });
+  const saveButton = document.getElementById('save');
+  saveButton.addEventListener('click', function(evt) {
+    saver();
   });
 }
 
@@ -259,7 +273,7 @@ async function gameStatusUpdater() {
     // If gameStatus is won then we load the victory screen
     if (data['GameStatus'] === 'WON') {
       // For reasons unknown this specific file refuses to load unless its this specific route
-      window.location.href='http://localhost:63342/Ohjelmisto_Projekti_2/FrontEnd/victory.html';
+      window.location.href = 'http://localhost:63342/Ohjelmisto_Projekti_2/FrontEnd/victory.html';
     }
   } catch (error) {
     console.log(error.message);
@@ -296,6 +310,48 @@ async function planeSwitcher() {
     console.log(error);
   }
   return newPlane;
+}
+
+async function saver() {
+  const response = await fetch('http://127.0.0.1:3000/save/');
+  const data = await response.json();
+  console.log(data);
+  if (data['SaveStatus'] === 'Confirmed') {
+    alert('Game has been saved');
+  }
+}//End of function hands off
+async function gameStartFromLoad() {
+  const startPos = document.getElementById('StartPos');
+  const endPos = document.getElementById('EndPos');
+  try {
+    const response = await fetch('http://127.0.0.1:3000/status/')
+    const data = await response.json()
+    function gameStartPos(data) {
+      const startLocation = document.createElement('li');
+      startLocation.textContent = 'Name: ' + data['Start'][0];
+      const icao = document.createElement('li');
+      icao.setAttribute('id', 'ICAO');
+      icao.textContent = 'Icao: ' + data['Start'][1];
+      startPos.append(startLocation);
+      startPos.append(icao);
+    }
+    gameStartPos(data)
+
+    function gameEndPos(data) {
+      const startLocation = document.createElement('li');
+      const endLocation = document.createElement('li');
+      startLocation.textContent = 'Name: ' + data['End'][0];
+      endLocation.textContent = 'Icao: ' + data['End'][1];
+      endPos.append(startLocation);
+      endPos.append(endLocation);
+    }
+
+    gameEndPos(data);
+
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 mainProgram();
