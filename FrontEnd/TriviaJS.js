@@ -33,7 +33,7 @@ async function gameLoading() {
       const load = document.createElement('button');
       id.textContent = i.Id;
       playerName.textContent = i.Player;
-      load.textContent = 'Load';
+      load.textContent = 'Lataa';
       load.setAttribute('id', i.Id);
       t.appendChild(id);
       t.appendChild(playerName);

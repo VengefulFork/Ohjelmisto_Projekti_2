@@ -2,7 +2,7 @@
 
 var map = L.map('map').setView([51.505, -0.09], 7);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 4, minZoom: 4,
+  maxZoom: 4, minZoom: 3,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }).addTo(map);
 
@@ -29,9 +29,9 @@ async function mainProgram() {
     planeSwitcher().then(i => {
       map.closePopup();
       if (i === 'Dash 8 Q400') {
-        planeChange.textContent = 'Change plane to Boeing 737';
+        planeChange.textContent = 'Vaihda kone: Boeing 737';
       } else {
-        planeChange.textContent = 'Change plane to Dash 8 Q400';
+        planeChange.textContent = 'Vaihda kone: Dash 8 Q400';
       }
       plane();
     });
@@ -111,7 +111,7 @@ async function mapCreator() {
           fillOpacity: 1,
           radius: 25000,
         }).addTo(map);
-        marker.bindPopup('You are here');
+        marker.bindPopup('Olet täällä');
       } //End of first if statement
       else if (conn.includes(i.Icao) && i.Icao !== endPoint) {
         const marker = L.circle([i.Lat, i.Long], {
@@ -123,18 +123,18 @@ async function mapCreator() {
         const popupDiv = document.createElement('div');
         popupDiv.setAttribute('id', i.Icao);
         const h4 = document.createElement('h4');
-        h4.textContent = 'You could fly here';
+        h4.textContent = 'Voit lentää tänne';
         popupDiv.appendChild(h4);
         const flyButton = document.createElement('button');
         flyButton.setAttribute('id', i.Icao);
         flyButton.type = 'button';
-        flyButton.textContent = 'Fly here';
+        flyButton.textContent = 'Lennä';
         const km = document.createElement('li');
         km.textContent = '';
         const flightInfo = document.createElement('ul');
         const time = document.createElement('li');
         const co2 = document.createElement('li');
-        flightInfo.innerHTML = 'Info for flight with current plane';
+        flightInfo.innerHTML = 'Lennon tiedot nykyisellä koneella';
         flightInfo.appendChild(time);
         flightInfo.appendChild(co2);
 
@@ -148,8 +148,8 @@ async function mapCreator() {
           const b = this._popup.getContent();
           const icao = b.id;
           distance(icao).then(i => {
-            km.textContent = 'Distance ' + i['Distance'] + ' KM';
-            co2.textContent = i['Co2'] + 'kg Co2 produced';
+            km.textContent = 'Etäisyys ' + i['Distance'] + ' KM';
+            co2.textContent = i['Co2'] + 'kg Co2 tuotettu';
             time.textContent = i['Time'] + ' min';
           });
         }
@@ -182,18 +182,18 @@ async function mapCreator() {
         const popupDiv = document.createElement('div');
         popupDiv.setAttribute('id', i.Icao);
         const h4 = document.createElement('h4');
-        h4.textContent = 'Fly here to win';
+        h4.textContent = 'Lennä tänne voittaaksesi';
         popupDiv.appendChild(h4);
         const flyButton = document.createElement('button');
         flyButton.setAttribute('id', i.Icao);
         flyButton.type = 'button';
-        flyButton.textContent = 'Fly here';
+        flyButton.textContent = 'Lennä';
         const km = document.createElement('li');
         km.textContent = '';
         const flightInfo = document.createElement('ul');
         const time = document.createElement('li');
         const co2 = document.createElement('li');
-        flightInfo.innerHTML = 'Info for flight with current plane';
+        flightInfo.innerHTML = 'Lennon tiedot nykyisellä koneella';
         flightInfo.appendChild(time);
         flightInfo.appendChild(co2);
 
@@ -207,8 +207,8 @@ async function mapCreator() {
           const b = this._popup.getContent();
           const icao = b.id;
           distance(icao).then(i => {
-            km.textContent = 'Distance ' + i['Distance'] + ' KM';
-            co2.textContent = i['Co2'] + 'kg Co2 produced';
+            km.textContent = 'Etäisyys ' + i['Distance'] + ' KM';
+            co2.textContent = i['Co2'] + 'kg Co2 tuotettu';
             time.textContent = i['Time'] + ' min';
           });
         }
@@ -287,10 +287,10 @@ async function plane() {
     const name = document.getElementById('PlaneName');
     const speed = document.getElementById('Speed');
     const co2PerKm = document.getElementById('Co2km');
-    name.innerHTML = 'Name : ' + data['Plane']['malli'];
-    speed.innerHTML = 'Speed of plane is : ' + data['Plane']['max_nopeus_kmh'] +
+    name.innerHTML = 'Malli : ' + data['Plane']['malli'];
+    speed.innerHTML = 'Koneen nopeus : ' + data['Plane']['max_nopeus_kmh'] +
         ' kmh';
-    co2PerKm.innerHTML = 'Co2 produced per km is around : ' +
+    co2PerKm.innerHTML = 'Co2 tuotettu per km noin : ' +
         data['Plane']['hiilidioksidi_per_km'] + ' kg';
     console.log(data);
   } catch (error) {
@@ -328,7 +328,7 @@ async function gameStartFromLoad() {
     const data = await response.json()
     function gameStartPos(data) {
       const startLocation = document.createElement('li');
-      startLocation.textContent = 'Name: ' + data['Start'][0];
+      startLocation.textContent = 'Nimi: ' + data['Start'][0];
       const icao = document.createElement('li');
       icao.setAttribute('id', 'ICAO');
       icao.textContent = 'Icao: ' + data['Start'][1];
@@ -340,7 +340,7 @@ async function gameStartFromLoad() {
     function gameEndPos(data) {
       const startLocation = document.createElement('li');
       const endLocation = document.createElement('li');
-      startLocation.textContent = 'Name: ' + data['End'][0];
+      startLocation.textContent = 'Nimi: ' + data['End'][0];
       endLocation.textContent = 'Icao: ' + data['End'][1];
       endPos.append(startLocation);
       endPos.append(endLocation);
