@@ -333,12 +333,53 @@ CREATE TABLE IF NOT EXISTS `edelliset_pelit` (
   `tuotettu_co2_kg` int(11) NOT NULL,
   `pisteet` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- Dumping data for table peli_projekti.edelliset_pelit: ~24 rows (approximately)
+INSERT INTO `edelliset_pelit` (`ID`, `pelaajan_nimi`, `aloitus_kentta`, `maali`, `kuljettu_matka_km`, `matkan_aika_min`, `tuotettu_co2_kg`, `pisteet`) VALUES
+	(6, 'Testi5', 'Zürich Airport', 'Amsterdam Airport Schiphol', 1600, 195, 15137, 9999),
+	(10, 'Juusto ', 'Vienna International Airport', 'Warsaw Chopin Airport', 2975, 389, 20614, 125),
+	(11, 'Lauri', 'Baneasa International Airport', 'Oslo Airport, Gardermoen', 3915, 533, 28073, 100),
+	(12, 'Lauri', 'Amsterdam Airport Schiphol', 'Stockholm-Arlanda Airport', 1158, 141, 9204, 200),
+	(13, 'Testing', 'London Heathrow Airport', 'Stockholm-Arlanda Airport', 1530, 181, 16874, 150),
+	(14, 'Testing', 'Sarajevo International Airport', 'Warsaw Chopin Airport', 2261, 232, 24934, 125),
+	(15, 'Testing', 'Amsterdam Airport Schiphol', 'Rome Fiumicino Airport', 2798, 266, 30857, 100),
+	(16, 'Testing', 'Sarajevo International Airport', 'Charles de Gaulle International Airport', 3100, 327, 34187, 100),
+	(17, 'Testing', 'Charles de Gaulle International Airport', 'Billund Airport', 877, 104, 9672, 200),
+	(18, 'Testing', 'Zürich Airport', 'Adolfo Suárez Madrid–Barajas Airport', 3064, 324, 33790, 100),
+	(19, 'Testing', 'Sarajevo International Airport', 'Rome Fiumicino Airport', 1794, 182, 19785, 150),
+	(20, 'Testing', 'Baneasa International Airport', 'Billund Airport', 1915, 202, 21118, 125),
+	(21, 'Testing', 'Sarajevo International Airport', 'Tromsø Airport, Langnes', 4452, 477, 49096, 100),
+	(22, 'Testing', 'Amsterdam Airport Schiphol', 'Adolfo Suárez Madrid–Barajas Airport', 1464, 141, 16145, 150),
+	(23, 'Testing', 'Berlin Brandenburg Airport', 'Rome Fiumicino Airport', 1343, 137, 14811, 175),
+	(24, 'Testing', 'Zürich Airport', 'Athens Eleftherios Airport', 1908, 193, 21042, 125),
+	(25, 'Testing', 'London Heathrow Airport', 'Baneasa International Airport', 2765, 392, 15988, 150),
+	(26, 'JS', 'Billund Airport', 'Charles de Gaulle International Airport', 877, 103, 9672, 200),
+	(27, 'Testing2', 'Tromsø Airport, Langnes', 'Berlin Brandenburg Airport', 2701, 274, 29786, 100),
+	(28, 'Testing5', 'Athens Eleftherios Airport', 'Kittilä Airport', 4933, 511, 54401, 100),
+	(29, 'Pelaaja 6', 'Keflavik International Airport', 'Adolfo Suárez Madrid–Barajas Airport', 5186, 518, 57193, 100),
+	(30, 'K', 'London Heathrow Airport', 'Stockholm-Arlanda Airport', 2328, 286, 25674, 100),
+	(31, 'JE', 'Sarajevo International Airport', 'Oslo Airport, Gardermoen', 3289, 376, 36271, 100),
+	(32, 'JE', 'Sarajevo International Airport', 'Oslo Airport, Gardermoen', 3289, 368, 36271, 100);
+
+-- Dumping structure for table peli_projekti.tallennetut_pelit
+CREATE TABLE IF NOT EXISTS `tallennetut_pelit` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `pelaajan_nimi` varchar(40) NOT NULL,
+  `aloitus_kentta` varchar(40) NOT NULL,
+  `maali` varchar(40) NOT NULL,
+  `sijainti_kentta` varchar(40) NOT NULL,
+  `pelaajan_kone` varchar(40) NOT NULL,
+  `kuljettu_matka_km` int(11) NOT NULL,
+  `matkan_aika_min` int(11) NOT NULL,
+  `tuotettu_co2_kg` int(11) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Dumping data for table peli_projekti.edelliset_pelit: ~2 rows (approximately)
-INSERT INTO `edelliset_pelit` (`ID`, `pelaajan_nimi`, `aloitus_kentta`, `maali`, `kuljettu_matka_km`, `matkan_aika_min`, `tuotettu_co2_kg`, `pisteet`) VALUES
-	(1, 'V', 'Zürich Airport', 'Sarajevo International Airport', 1101, 151, 6367, 9999),
-	(2, 'V', 'Riga International Airport', 'Helsinki Vantaa Airport', 2626, 387, 15184, 9999);
+-- Dumping data for table peli_projekti.tallennetut_pelit: ~2 rows (approximately)
+INSERT INTO `tallennetut_pelit` (`ID`, `pelaajan_nimi`, `aloitus_kentta`, `maali`, `sijainti_kentta`, `pelaajan_kone`, `kuljettu_matka_km`, `matkan_aika_min`, `tuotettu_co2_kg`) VALUES
+	(1, 'L', 'Helsinki Vantaa Airport', 'Zürich Airport', 'EGPD', 'Boeing 737', 1604, 155, 17690),
+	(2, 'JE', 'Sarajevo International Airport', 'Oslo Airport, Gardermoen', 'LSZH', 'Boeing 737', 1101, 131, 12142);
 
 -- Dumping structure for table peli_projekti.yhteys
 CREATE TABLE IF NOT EXISTS `yhteys` (

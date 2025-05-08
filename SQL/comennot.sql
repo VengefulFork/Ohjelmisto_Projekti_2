@@ -49,8 +49,20 @@ create table edelliset_pelit (
 	pisteet int not null,
 	primary key (ID)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-		
 
+Tallenusta varten luotu uusi taulu
+create TABLE tallennetut_pelit(
+ID int NOT NULL auto_increment,
+pelaajan_nimi VARCHAR(40) NOT NULL,
+aloitus_kentta VARCHAr(40) NOT NULL,
+maali VARCHAR(40) NOT NULL,
+sijainti_kentta VARCHAR(40) NOT NULL,
+pelaajan_kone VARCHAR(40) NOT NULL,
+kuljettu_matka_km int NOT NULL,
+matkan_aika_min int NOT NULL,
+tuotettu_co2_kg int NOT NULL,
+PRIMARY KEY (ID)
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 
